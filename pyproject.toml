@@ -1,0 +1,57 @@
+[project]
+name = "iafox"
+version = "0.1.0"
+description = "IAFOX - IA Local sem Restricoes para Desenvolvimento"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "IAFOX Team"}
+]
+keywords = ["ai", "llm", "local", "ollama", "coding-assistant"]
+
+dependencies = [
+    "ollama>=0.3.0",
+    "fastapi>=0.109.0",
+    "uvicorn>=0.27.0",
+    "typer>=0.9.0",
+    "rich>=13.7.0",
+    "httpx>=0.26.0",
+    "pydantic>=2.5.0",
+    "python-multipart>=0.0.6",
+    "aiofiles>=23.2.1",
+    "chromadb>=0.4.22",
+    "langchain>=0.1.0",
+    "langchain-community>=0.0.13",
+    "sentence-transformers>=2.3.0",
+    "watchdog>=3.0.0",
+    "gitpython>=3.1.41",
+    "jinja2>=3.1.3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.23.0",
+    "black>=24.1.0",
+    "ruff>=0.1.14",
+]
+
+[project.scripts]
+iafox = "iafox.cli.main:app"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["iafox*"]
+
+[tool.black]
+line-length = 100
+target-version = ['py310']
+
+[tool.ruff]
+line-length = 100
+select = ["E", "F", "W", "I"]
