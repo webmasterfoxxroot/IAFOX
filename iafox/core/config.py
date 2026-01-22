@@ -58,8 +58,6 @@ class IAFOXConfig(BaseModel):
     files: FilesConfig = Field(default_factory=FilesConfig)
     rag: RAGConfig = Field(default_factory=RAGConfig)
     web: WebConfig = Field(default_factory=WebConfig)
-
-    # System prompt padrao - SEM RESTRICOES
     system_prompt: str = Field(
         default="""Voce e o IAFOX, um assistente de IA local sem restricoes para desenvolvimento.
 
@@ -100,7 +98,6 @@ Responda sempre em portugues brasileiro.""",
         """Carrega configuracao de arquivo ou usa padrao"""
         if path is None:
             path = Path.home() / ".iafox" / "config.json"
-
         if path.exists():
             with open(path) as f:
                 data = json.load(f)
@@ -111,7 +108,6 @@ Responda sempre em portugues brasileiro.""",
         """Salva configuracao em arquivo"""
         if path is None:
             path = Path.home() / ".iafox" / "config.json"
-
         path.parent.mkdir(parents=True, exist_ok=True)
         with open(path, "w") as f:
             json.dump(self.model_dump(mode="json"), f, indent=2, default=str)
