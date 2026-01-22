@@ -4,64 +4,242 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IAFOX - IA Local</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --bg-primary: #0d1117;
-            --bg-secondary: #161b22;
-            --bg-tertiary: #21262d;
-            --text-primary: #c9d1d9;
-            --text-secondary: #8b949e;
-            --accent: #58a6ff;
-            --accent-hover: #79b8ff;
-            --success: #3fb950;
-            --error: #f85149;
-            --border: #30363d;
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #252525;
+            --bg-hover: #2d2d2d;
+            --text-primary: #e4e4e7;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent: #f97316;
+            --accent-hover: #fb923c;
+            --accent-soft: rgba(249, 115, 22, 0.15);
+            --success: #22c55e;
+            --error: #ef4444;
+            --border: #2a2a2a;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter', -apple-system, sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
             height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Left Sidebar - Chats */
+        .sidebar-left {
+            width: 260px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .logo h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), #fbbf24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .new-chat-btn {
+            width: 100%;
+            padding: 10px 16px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .new-chat-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .chats-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+
+        .chat-item {
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 4px;
+            transition: all 0.15s;
+        }
+
+        .chat-item:hover {
+            background: var(--bg-hover);
+        }
+
+        .chat-item.active {
+            background: var(--accent-soft);
+        }
+
+        .chat-item-title {
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-item-date {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Workspace Selector */
+        .workspace-section {
+            padding: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .workspace-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+
+        .workspace-selector {
+            display: flex;
+            gap: 8px;
+        }
+
+        .workspace-input {
+            flex: 1;
+            padding: 8px 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 0.8rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .workspace-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .workspace-btn {
+            padding: 8px 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .workspace-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
             display: flex;
             flex-direction: column;
         }
 
         /* Header */
         .header {
+            padding: 12px 20px;
             background: var(--bg-secondary);
             border-bottom: 1px solid var(--border);
-            padding: 12px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
 
-        .logo {
+        .header-left {
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .logo h1 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            background: linear-gradient(135deg, var(--accent), var(--success));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .toggle-files-btn {
+            padding: 8px 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+
+        .toggle-files-btn:hover {
+            background: var(--bg-hover);
+        }
+
+        .toggle-files-btn.active {
+            background: var(--accent-soft);
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .current-workspace {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .model-badge {
+            padding: 6px 10px;
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
         }
 
         .status {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 0.875rem;
+            gap: 6px;
+            font-size: 0.8rem;
             color: var(--text-secondary);
         }
 
@@ -76,64 +254,14 @@
             background: var(--error);
         }
 
-        /* Main content */
-        .main {
+        /* Chat Area */
+        .chat-area {
             flex: 1;
             display: flex;
             overflow: hidden;
         }
 
-        /* Sidebar */
-        .sidebar {
-            width: 280px;
-            background: var(--bg-secondary);
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .sidebar-header {
-            padding: 16px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .sidebar-header h3 {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .file-tree {
-            flex: 1;
-            overflow-y: auto;
-            padding: 8px;
-        }
-
-        .file-item {
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.875rem;
-        }
-
-        .file-item:hover {
-            background: var(--bg-tertiary);
-        }
-
-        .file-item.folder::before {
-            content: '📁';
-        }
-
-        .file-item.file::before {
-            content: '📄';
-        }
-
-        /* Chat area */
-        .chat-container {
+        .messages-container {
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -150,121 +278,41 @@
 
         .message {
             max-width: 85%;
-            padding: 12px 16px;
-            border-radius: 12px;
-            line-height: 1.5;
+            padding: 14px 18px;
+            border-radius: 16px;
+            line-height: 1.6;
+            font-size: 0.9rem;
         }
 
         .message.user {
             align-self: flex-end;
             background: var(--accent);
             color: white;
+            border-bottom-right-radius: 4px;
         }
 
         .message.assistant {
             align-self: flex-start;
-            background: var(--bg-secondary);
+            background: var(--bg-tertiary);
             border: 1px solid var(--border);
+            border-bottom-left-radius: 4px;
         }
 
         .message pre {
             background: var(--bg-primary);
             padding: 12px;
-            border-radius: 6px;
+            border-radius: 8px;
             overflow-x: auto;
-            margin: 8px 0;
+            margin: 10px 0;
+            border: 1px solid var(--border);
         }
 
         .message code {
-            font-family: 'Fira Code', monospace;
-            font-size: 0.875rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
         }
 
-        /* Input area */
-        .input-area {
-            padding: 16px 20px;
-            background: var(--bg-secondary);
-            border-top: 1px solid var(--border);
-        }
-
-        .input-container {
-            display: flex;
-            gap: 12px;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .input-container textarea {
-            flex: 1;
-            padding: 12px 16px;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text-primary);
-            font-size: 1rem;
-            resize: none;
-            min-height: 50px;
-            max-height: 200px;
-        }
-
-        .input-container textarea:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
-        .send-btn {
-            padding: 12px 24px;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background 0.2s;
-        }
-
-        .send-btn:hover {
-            background: var(--accent-hover);
-        }
-
-        .send-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* Typing indicator */
-        .typing {
-            display: flex;
-            gap: 4px;
-            padding: 8px 0;
-        }
-
-        .typing span {
-            width: 8px;
-            height: 8px;
-            background: var(--text-secondary);
-            border-radius: 50%;
-            animation: typing 1.4s infinite;
-        }
-
-        .typing span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .typing span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes typing {
-            0%, 60%, 100% {
-                transform: translateY(0);
-            }
-            30% {
-                transform: translateY(-8px);
-            }
-        }
-
-        /* Welcome screen */
+        /* Welcome */
         .welcome {
             display: flex;
             flex-direction: column;
@@ -276,105 +324,286 @@
         }
 
         .welcome h2 {
-            font-size: 2rem;
-            margin-bottom: 16px;
+            font-size: 1.5rem;
+            margin: 16px 0 8px;
         }
 
         .welcome p {
             color: var(--text-secondary);
-            max-width: 500px;
-            margin-bottom: 24px;
+            max-width: 450px;
+            font-size: 0.9rem;
         }
 
-        .welcome-features {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-            max-width: 600px;
+        .quick-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
-        .feature {
+        .quick-action {
+            padding: 12px 20px;
             background: var(--bg-secondary);
-            padding: 16px;
-            border-radius: 8px;
             border: 1px solid var(--border);
-            text-align: left;
-        }
-
-        .feature h4 {
-            color: var(--accent);
-            margin-bottom: 4px;
-        }
-
-        .feature p {
-            font-size: 0.875rem;
+            border-radius: 8px;
             color: var(--text-secondary);
-            margin: 0;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .quick-action:hover {
+            background: var(--bg-hover);
+            border-color: var(--accent);
+            color: var(--text-primary);
+        }
+
+        /* Input Area */
+        .input-area {
+            padding: 16px 20px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+        }
+
+        .input-container {
+            display: flex;
+            gap: 12px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .input-container textarea {
+            flex: 1;
+            padding: 12px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: inherit;
+            resize: none;
+            min-height: 48px;
+            max-height: 150px;
+        }
+
+        .input-container textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .send-btn {
+            padding: 12px 20px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .send-btn:hover:not(:disabled) {
+            background: var(--accent-hover);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Right Sidebar - Files */
+        .sidebar-right {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            transition: width 0.2s;
+        }
+
+        .sidebar-right.hidden {
+            width: 0;
+            overflow: hidden;
+            border: none;
+        }
+
+        .files-header {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .files-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .refresh-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+        }
+
+        .refresh-btn:hover {
+            color: var(--text-primary);
+            background: var(--bg-hover);
+        }
+
+        .file-tree {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+
+        .tree-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 2px;
+        }
+
+        .tree-item:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .tree-icon {
+            width: 18px;
+            margin-right: 8px;
+            font-size: 12px;
+        }
+
+        .tree-name {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .tree-children {
+            margin-left: 16px;
+        }
+
+        /* Typing */
+        .typing {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing span {
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: typing 1.2s infinite;
+        }
+
+        .typing span:nth-child(2) { animation-delay: 0.15s; }
+        .typing span:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-6px); }
         }
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="logo">
-            <h1>🦊 IAFOX</h1>
-        </div>
-        <div class="status">
-            <span class="status-dot" id="status-dot"></span>
-            <span id="status-text">Conectando...</span>
-        </div>
-    </header>
-
-    <main class="main">
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <h3>Arquivos</h3>
+    <!-- Left Sidebar - Chats -->
+    <aside class="sidebar-left">
+        <div class="sidebar-header">
+            <div class="logo">
+                <span>🦊</span>
+                <h1>IAFOX</h1>
             </div>
-            <div class="file-tree" id="file-tree">
-                <!-- Populated by JS -->
-            </div>
-        </aside>
+            <button class="new-chat-btn" onclick="newChat()">
+                + Novo Chat
+            </button>
+        </div>
 
-        <div class="chat-container">
-            <div class="messages" id="messages">
-                <div class="welcome">
-                    <h2>Bem-vindo ao IAFOX</h2>
-                    <p>IA Local sem restricoes para desenvolvimento.
-                       Eu posso ler, criar e editar arquivos no seu computador.</p>
-                    <div class="welcome-features">
-                        <div class="feature">
-                            <h4>📁 Gerenciar Arquivos</h4>
-                            <p>Ler, criar, editar e buscar arquivos</p>
+        <div class="chats-list" id="chats-list">
+            <!-- Chats serao inseridos aqui -->
+        </div>
+
+        <div class="workspace-section">
+            <div class="workspace-label">Diretorio de Trabalho</div>
+            <div class="workspace-selector">
+                <input type="text" class="workspace-input" id="workspace-input" placeholder="C:\meu\projeto" />
+                <button class="workspace-btn" onclick="changeWorkspace()">OK</button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header class="header">
+            <div class="header-left">
+                <button class="toggle-files-btn active" id="toggle-files" onclick="toggleFiles()">
+                    📁 Arquivos
+                </button>
+                <span class="current-workspace" id="current-workspace">.</span>
+            </div>
+            <div class="header-right">
+                <span class="model-badge">qwen2.5-coder:32b</span>
+                <div class="status">
+                    <span class="status-dot" id="status-dot"></span>
+                    <span id="status-text">Conectando...</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="chat-area">
+            <div class="messages-container">
+                <div class="messages" id="messages">
+                    <div class="welcome">
+                        <div style="font-size: 48px;">🦊</div>
+                        <h2>IAFOX</h2>
+                        <p>IA local sem restricoes. Selecione um diretorio e comece a programar!</p>
+                        <div class="quick-actions">
+                            <button class="quick-action" onclick="quickAction('Analise este projeto e me de uma visao geral')">📊 Analisar Projeto</button>
+                            <button class="quick-action" onclick="quickAction('Liste os arquivos principais deste projeto')">📁 Listar Arquivos</button>
+                            <button class="quick-action" onclick="quickAction('Me ajude a melhorar este codigo')">🔧 Melhorar Codigo</button>
                         </div>
-                        <div class="feature">
-                            <h4>💻 Executar Comandos</h4>
-                            <p>Rodar comandos no terminal</p>
-                        </div>
-                        <div class="feature">
-                            <h4>🔧 Sem Restricoes</h4>
-                            <p>Ajudo com qualquer codigo</p>
-                        </div>
-                        <div class="feature">
-                            <h4>🔒 100% Local</h4>
-                            <p>Seus dados ficam no seu PC</p>
-                        </div>
+                    </div>
+                </div>
+
+                <div class="input-area">
+                    <div class="input-container">
+                        <textarea id="input" placeholder="Digite sua mensagem..." rows="1"></textarea>
+                        <button class="send-btn" id="send-btn">Enviar</button>
                     </div>
                 </div>
             </div>
 
-            <div class="input-area">
-                <div class="input-container">
-                    <textarea
-                        id="input"
-                        placeholder="Digite sua mensagem... (Enter para enviar, Shift+Enter para nova linha)"
-                        rows="1"
-                    ></textarea>
-                    <button class="send-btn" id="send-btn">Enviar</button>
+            <!-- Right Sidebar - Files -->
+            <aside class="sidebar-right" id="sidebar-right">
+                <div class="files-header">
+                    <span class="files-title">Explorador</span>
+                    <button class="refresh-btn" onclick="loadFiles()">↻</button>
                 </div>
-            </div>
+                <div class="file-tree" id="file-tree"></div>
+            </aside>
         </div>
-    </main>
+    </div>
 
     <script>
+        // Estado
+        let ws = null;
+        let currentChat = null;
+        let chats = JSON.parse(localStorage.getItem('iafox_chats') || '[]');
+        let workspace = localStorage.getItem('iafox_workspace') || '.';
+
         // Elementos
         const messagesEl = document.getElementById('messages');
         const inputEl = document.getElementById('input');
@@ -382,10 +611,11 @@
         const statusDot = document.getElementById('status-dot');
         const statusText = document.getElementById('status-text');
         const fileTree = document.getElementById('file-tree');
-
-        // Estado
-        let ws = null;
-        let isTyping = false;
+        const chatsList = document.getElementById('chats-list');
+        const workspaceInput = document.getElementById('workspace-input');
+        const currentWorkspaceEl = document.getElementById('current-workspace');
+        const sidebarRight = document.getElementById('sidebar-right');
+        const toggleFilesBtn = document.getElementById('toggle-files');
 
         // WebSocket
         function connect() {
@@ -396,6 +626,9 @@
                 statusDot.classList.remove('disconnected');
                 statusText.textContent = 'Conectado';
                 loadFiles();
+                if (workspace !== '.') {
+                    ws.send(JSON.stringify({ type: 'workspace', path: workspace }));
+                }
             };
 
             ws.onclose = () => {
@@ -408,29 +641,35 @@
                 const data = JSON.parse(event.data);
                 handleMessage(data);
             };
-
-            ws.onerror = (error) => {
-                console.error('WebSocket error:', error);
-            };
         }
 
-        // Handlers
+        let currentAssistantMsg = null;
+
         function handleMessage(data) {
             if (data.type === 'chunk') {
-                appendToLastMessage(data.content);
+                if (!currentAssistantMsg) {
+                    removeTyping();
+                    currentAssistantMsg = addMessage('', 'assistant');
+                }
+                currentAssistantMsg.innerHTML = formatMessage(
+                    currentAssistantMsg.textContent + data.content
+                );
+                messagesEl.scrollTop = messagesEl.scrollHeight;
             } else if (data.type === 'done') {
-                isTyping = false;
-                removeTyping();
+                if (currentChat && currentAssistantMsg) {
+                    saveMessage('assistant', currentAssistantMsg.textContent);
+                }
+                currentAssistantMsg = null;
                 sendBtn.disabled = false;
+            } else if (data.type === 'workspace_changed') {
+                currentWorkspaceEl.textContent = data.path;
+                loadFiles();
             }
         }
 
         function addMessage(content, role) {
-            // Remove welcome se for primeira mensagem
             const welcome = messagesEl.querySelector('.welcome');
-            if (welcome) {
-                welcome.remove();
-            }
+            if (welcome) welcome.remove();
 
             const msg = document.createElement('div');
             msg.className = `message ${role}`;
@@ -440,25 +679,10 @@
             return msg;
         }
 
-        function appendToLastMessage(content) {
-            const messages = messagesEl.querySelectorAll('.message.assistant');
-            let lastMsg = messages[messages.length - 1];
-
-            if (!lastMsg || !isTyping) {
-                lastMsg = addMessage('', 'assistant');
-                isTyping = true;
-            }
-
-            lastMsg.innerHTML = formatMessage(lastMsg.textContent + content);
-            messagesEl.scrollTop = messagesEl.scrollHeight;
-        }
-
         function formatMessage(text) {
-            // Codigo em bloco
             text = text.replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>');
-            // Codigo inline
             text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
-            // Quebras de linha
+            text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
             text = text.replace(/\n/g, '<br>');
             return text;
         }
@@ -472,93 +696,192 @@
         }
 
         function removeTyping() {
-            const typing = messagesEl.querySelector('.typing-indicator');
-            if (typing) typing.remove();
+            const t = messagesEl.querySelector('.typing-indicator');
+            if (t) t.remove();
         }
 
-        // Enviar mensagem
-        async function sendMessage() {
+        function sendMessage() {
             const message = inputEl.value.trim();
             if (!message || !ws || ws.readyState !== WebSocket.OPEN) return;
 
+            if (!currentChat) {
+                currentChat = createChat(message.slice(0, 50));
+            }
+
             addMessage(message, 'user');
+            saveMessage('user', message);
             inputEl.value = '';
             inputEl.style.height = 'auto';
             sendBtn.disabled = true;
             addTyping();
 
-            ws.send(JSON.stringify({
-                type: 'message',
-                content: message
-            }));
+            ws.send(JSON.stringify({ type: 'message', content: message }));
         }
 
-        // Carregar arquivos
+        // Chats
+        function createChat(title) {
+            const chat = {
+                id: Date.now().toString(),
+                title: title || 'Novo Chat',
+                date: new Date().toLocaleDateString('pt-BR'),
+                messages: []
+            };
+            chats.unshift(chat);
+            saveChats();
+            renderChats();
+            return chat;
+        }
+
+        function saveMessage(role, content) {
+            if (!currentChat) return;
+            currentChat.messages.push({ role, content });
+            saveChats();
+        }
+
+        function saveChats() {
+            localStorage.setItem('iafox_chats', JSON.stringify(chats));
+        }
+
+        function renderChats() {
+            chatsList.innerHTML = chats.map(chat => `
+                <div class="chat-item ${currentChat?.id === chat.id ? 'active' : ''}"
+                     onclick="loadChat('${chat.id}')">
+                    <div class="chat-item-title">${chat.title}</div>
+                    <div class="chat-item-date">${chat.date}</div>
+                </div>
+            `).join('');
+        }
+
+        function loadChat(id) {
+            const chat = chats.find(c => c.id === id);
+            if (!chat) return;
+
+            currentChat = chat;
+            messagesEl.innerHTML = '';
+
+            chat.messages.forEach(m => addMessage(m.content, m.role));
+            renderChats();
+
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: 'clear' }));
+            }
+        }
+
+        function newChat() {
+            currentChat = null;
+            messagesEl.innerHTML = `
+                <div class="welcome">
+                    <div style="font-size: 48px;">🦊</div>
+                    <h2>IAFOX</h2>
+                    <p>IA local sem restricoes. Selecione um diretorio e comece a programar!</p>
+                    <div class="quick-actions">
+                        <button class="quick-action" onclick="quickAction('Analise este projeto')">📊 Analisar</button>
+                        <button class="quick-action" onclick="quickAction('Liste os arquivos')">📁 Arquivos</button>
+                        <button class="quick-action" onclick="quickAction('Me ajude a melhorar')">🔧 Melhorar</button>
+                    </div>
+                </div>
+            `;
+            renderChats();
+
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: 'clear' }));
+            }
+        }
+
+        // Workspace
+        function changeWorkspace() {
+            const path = workspaceInput.value.trim();
+            if (!path) return;
+
+            workspace = path;
+            localStorage.setItem('iafox_workspace', workspace);
+            currentWorkspaceEl.textContent = workspace;
+
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: 'workspace', path: workspace }));
+            }
+        }
+
+        // Files
+        function toggleFiles() {
+            sidebarRight.classList.toggle('hidden');
+            toggleFilesBtn.classList.toggle('active');
+        }
+
         async function loadFiles() {
             try {
-                const response = await fetch('/api/files/tree?max_depth=2');
+                const response = await fetch(`/api/files/tree?max_depth=3&workspace=${encodeURIComponent(workspace)}`);
                 const tree = await response.json();
-                renderFileTree(tree, fileTree);
+                renderFileTree(tree);
             } catch (error) {
-                console.error('Erro ao carregar arquivos:', error);
+                fileTree.innerHTML = '<div class="tree-item">Erro ao carregar</div>';
             }
         }
 
-        function renderFileTree(node, container, level = 0) {
-            container.innerHTML = '';
-            renderNode(node, container, level);
-        }
+        function renderFileTree(node, container = fileTree, level = 0) {
+            if (level === 0) container.innerHTML = '';
 
-        function renderNode(node, container, level) {
-            if (!node.children) return;
+            if (node.children) {
+                node.children.forEach(child => {
+                    const item = document.createElement('div');
+                    const ext = child.name.split('.').pop().toLowerCase();
+                    const icon = child.type === 'dir' ? '📁' :
+                                 ext === 'py' ? '🐍' :
+                                 ext === 'js' ? '📜' :
+                                 ext === 'html' ? '🌐' : '📄';
 
-            for (const child of node.children) {
-                const item = document.createElement('div');
-                item.className = `file-item ${child.type === 'dir' ? 'folder' : 'file'}`;
-                item.style.paddingLeft = `${12 + level * 16}px`;
-                item.textContent = child.name;
+                    item.className = 'tree-item';
+                    item.innerHTML = `<span class="tree-icon">${icon}</span><span class="tree-name">${child.name}</span>`;
 
-                if (child.type === 'file') {
-                    item.onclick = () => loadFile(child.path);
-                }
+                    if (child.type === 'dir') {
+                        const childrenContainer = document.createElement('div');
+                        childrenContainer.className = 'tree-children';
+                        childrenContainer.style.display = 'none';
 
-                container.appendChild(item);
+                        item.onclick = (e) => {
+                            e.stopPropagation();
+                            childrenContainer.style.display =
+                                childrenContainer.style.display === 'none' ? 'block' : 'none';
+                            item.querySelector('.tree-icon').textContent =
+                                childrenContainer.style.display === 'none' ? '📁' : '📂';
+                        };
 
-                if (child.children) {
-                    renderNode(child, container, level + 1);
-                }
+                        container.appendChild(item);
+                        container.appendChild(childrenContainer);
+                        if (child.children) renderFileTree(child, childrenContainer, level + 1);
+                    } else {
+                        item.onclick = () => {
+                            inputEl.value = `Leia e analise o arquivo: ${child.name}`;
+                            inputEl.focus();
+                        };
+                        container.appendChild(item);
+                    }
+                });
             }
         }
 
-        async function loadFile(path) {
-            try {
-                const response = await fetch(`/api/files/read?path=${encodeURIComponent(path)}`);
-                const data = await response.json();
-
-                // Adiciona como mensagem do usuario
-                inputEl.value = `Leia e analise o arquivo: ${path}`;
-                sendMessage();
-            } catch (error) {
-                console.error('Erro ao carregar arquivo:', error);
-            }
+        function quickAction(text) {
+            inputEl.value = text;
+            sendMessage();
         }
 
-        // Event listeners
+        // Events
         sendBtn.addEventListener('click', sendMessage);
-
         inputEl.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 sendMessage();
             }
         });
-
         inputEl.addEventListener('input', () => {
             inputEl.style.height = 'auto';
-            inputEl.style.height = Math.min(inputEl.scrollHeight, 200) + 'px';
+            inputEl.style.height = Math.min(inputEl.scrollHeight, 150) + 'px';
         });
 
-        // Iniciar
+        // Init
+        workspaceInput.value = workspace;
+        currentWorkspaceEl.textContent = workspace;
+        renderChats();
         connect();
     </script>
 </body>
