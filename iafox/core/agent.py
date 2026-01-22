@@ -8,6 +8,7 @@ from typing import AsyncGenerator, Optional, Callable, Any
 from pydantic import BaseModel
 from ..llm.ollama_client import OllamaClient, Message
 from ..files.manager import FileManager, FileContent
+from ..tools.web_search import buscar_web, buscar_noticias
 from .config import config
 
 
@@ -76,6 +77,14 @@ Uso: <tool>execute_command</tool><args>{"command": "pip install requests"}</args
 Mostra arvore de arquivos do projeto.
 Uso: <tool>file_tree</tool><args>{"path": ".", "max_depth": 3}</args>
 
+### web_search
+Busca na internet usando DuckDuckGo. Use para encontrar links, sites, informacoes atuais.
+Uso: <tool>web_search</tool><args>{"query": "farmacias em cuiaba", "max_results": 10}</args>
+
+### search_news
+Busca noticias recentes na internet.
+Uso: <tool>search_news</tool><args>{"query": "noticias brasil", "max_results": 10}</args>
+
 ---
 
 IMPORTANTE:
@@ -108,6 +117,8 @@ IMPORTANTE:
             "search_files": self._tool_search_files,
             "execute_command": self._tool_execute_command,
             "file_tree": self._tool_file_tree,
+            "web_search": self._tool_web_search,
+            "search_news": self._tool_search_news,
         }
 
     async def _tool_read_file(self, path: str) -> ToolResult:
@@ -235,6 +246,22 @@ IMPORTANTE:
                 return "\n".join(lines)
 
             return ToolResult(success=True, result=format_tree(tree))
+        except Exception as e:
+            return ToolResult(success=False, result=None, error=str(e))
+
+    async def _tool_web_search(self, query: str, max_results: int = 10) -> ToolResult:
+        """Ferramenta: busca na web"""
+        try:
+            result = buscar_web(query, max_results)
+            return ToolResult(success=True, result=result)
+        except Exception as e:
+            return ToolResult(success=False, result=None, error=str(e))
+
+    async def _tool_search_news(self, query: str, max_results: int = 10) -> ToolResult:
+        """Ferramenta: busca noticias"""
+        try:
+            result = buscar_noticias(query, max_results)
+            return ToolResult(success=True, result=result)
         except Exception as e:
             return ToolResult(success=False, result=None, error=str(e))
 
