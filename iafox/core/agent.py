@@ -9,6 +9,7 @@ from pydantic import BaseModel
 from ..llm.ollama_client import OllamaClient, Message
 from ..files.manager import FileManager, FileContent
 from ..tools.web_search import buscar_web, buscar_noticias
+from ..tools.rag import buscar_nos_livros, verificar_index_existe
 from .config import config
 
 
@@ -112,6 +113,21 @@ QUANDO USAR:
 
 Uso: <tool>search_news</tool><args>{"query": "noticias Brasil hoje", "max_results": 10}</args>
 
+### buscar_livros (BUSCA NOS LIVROS DO 8° ANO)
+Busca informações nos livros indexados (Trilhas e Evolution Start - FTD).
+
+QUANDO USAR:
+- Usuario pergunta sobre materias escolares (matematica, portugues, ciencias, etc)
+- Usuario quer explicacao de conteudo do 8° ano
+- Usuario pergunta sobre exercicios ou teoria escolar
+- Duvidas sobre equacoes, gramatica, historia, geografia, etc.
+
+MATERIAS DISPONIVEIS:
+- matematica, portugues, ciencias, historia, geografia, ingles, arte
+
+Uso: <tool>buscar_livros</tool><args>{"query": "equacao do segundo grau", "materia": "matematica", "max_results": 5}</args>
+Uso sem filtro: <tool>buscar_livros</tool><args>{"query": "revolucao francesa"}</args>
+
 ---
 
 REGRAS CRITICAS PARA BUSCAS:
@@ -157,6 +173,7 @@ FLUXO CORRETO:
             "file_tree": self._tool_file_tree,
             "web_search": self._tool_web_search,
             "search_news": self._tool_search_news,
+            "buscar_livros": self._tool_buscar_livros,
         }
 
     async def _tool_read_file(self, path: str) -> ToolResult:
@@ -299,6 +316,14 @@ FLUXO CORRETO:
         """Ferramenta: busca noticias"""
         try:
             result = buscar_noticias(query, max_results)
+            return ToolResult(success=True, result=result)
+        except Exception as e:
+            return ToolResult(success=False, result=None, error=str(e))
+
+    async def _tool_buscar_livros(self, query: str, materia: str = None, max_results: int = 5) -> ToolResult:
+        """Ferramenta: busca nos livros do 8° ano"""
+        try:
+            result = buscar_nos_livros(query, materia, max_results)
             return ToolResult(success=True, result=result)
         except Exception as e:
             return ToolResult(success=False, result=None, error=str(e))
