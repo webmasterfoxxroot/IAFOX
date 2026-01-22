@@ -79,11 +79,13 @@ Uso: <tool>file_tree</tool><args>{"path": ".", "max_depth": 3}</args>
 
 ### web_search
 Busca na internet usando DuckDuckGo. Use para encontrar links, sites, informacoes atuais.
-Uso: <tool>web_search</tool><args>{"query": "farmacias em cuiaba", "max_results": 10}</args>
+IMPORTANTE: Sempre escreva a query em PORTUGUES BRASILEIRO, com palavras corretas.
+Uso: <tool>web_search</tool><args>{"query": "farmácias em Cuiabá", "max_results": 10}</args>
 
 ### search_news
 Busca noticias recentes na internet.
-Uso: <tool>search_news</tool><args>{"query": "noticias brasil", "max_results": 10}</args>
+IMPORTANTE: Sempre escreva a query em PORTUGUES BRASILEIRO.
+Uso: <tool>search_news</tool><args>{"query": "notícias Brasil hoje", "max_results": 10}</args>
 
 ---
 
@@ -92,6 +94,8 @@ IMPORTANTE:
 - Apos usar uma ferramenta, espere o resultado antes de continuar
 - Seja preciso nos caminhos de arquivo
 - Use edit_file para modificacoes pequenas, write_file para criar/reescrever arquivos
+- Para web_search: SEMPRE escreva a query em PORTUGUES BRASILEIRO correto
+- NUNCA use espanhol (en, de la) - use portugues (em, de, da, do)
 """
 
     def __init__(
