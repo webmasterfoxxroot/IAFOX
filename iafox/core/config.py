@@ -12,7 +12,7 @@ import json
 class OllamaConfig(BaseModel):
     """Configuracoes do Ollama"""
     host: str = Field(default="http://localhost:11434", description="URL do servidor Ollama")
-    model: str = Field(default="qwen2.5-coder:32b", description="Modelo especializado em codigo")
+    model: str = Field(default="qwen3-coder:30b", description="Melhor modelo de codigo para RTX 4090")
     timeout: int = Field(default=300, description="Timeout em segundos")
 
 
