@@ -307,6 +307,17 @@
         .message-content h3 { font-size: 1.1rem; }
         .message-content h4 { font-size: 1rem; }
 
+        .message-content a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px solid var(--accent);
+            word-break: break-all;
+        }
+
+        .message-content a:hover {
+            opacity: 0.8;
+        }
+
         /* Welcome */
         .welcome {
             display: flex;
@@ -543,6 +554,12 @@
 
             // Codigo inline
             text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+            // Links markdown [texto](url)
+            text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+
+            // URLs soltas (http/https)
+            text = text.replace(/(?<!href="|">)(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>');
 
             // Negrito
             text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
