@@ -77,25 +77,59 @@ Uso: <tool>execute_command</tool><args>{"command": "pip install requests"}</args
 Mostra arvore de arquivos do projeto.
 Uso: <tool>file_tree</tool><args>{"path": ".", "max_depth": 3}</args>
 
-### web_search
-Busca na internet usando DuckDuckGo. Use para encontrar links, sites, informacoes atuais.
-IMPORTANTE: Sempre escreva a query em PORTUGUES BRASILEIRO, com palavras corretas.
-Uso: <tool>web_search</tool><args>{"query": "farmácias em Cuiabá", "max_results": 10}</args>
+### web_search (FERRAMENTA PRINCIPAL DE BUSCA)
+Busca na internet usando DuckDuckGo.
+
+QUANDO USAR (OBRIGATORIO):
+- Usuario pergunta telefone/contato de empresa -> USE IMEDIATAMENTE
+- Usuario pergunta endereco/localizacao -> USE IMEDIATAMENTE
+- Usuario pergunta sobre lojas/farmacias/restaurantes -> USE IMEDIATAMENTE
+- Usuario quer link de site -> USE IMEDIATAMENTE
+- Usuario pergunta preco/horario -> USE IMEDIATAMENTE
+- QUALQUER pergunta sobre empresas/negocios -> USE IMEDIATAMENTE
+
+COMO FORMULAR A QUERY:
+- SEMPRE em PORTUGUES BRASILEIRO (nunca espanhol!)
+- Inclua palavras-chave: "telefone", "endereco", "site oficial", "contato"
+- Inclua a cidade quando relevante
+- Seja especifico: "farmacia Pague Menos Cuiaba telefone" (bom)
+
+EXEMPLOS DE QUERIES:
+- "Pague Menos farmacia Cuiaba telefone contato"
+- "Drogasil endereco unidades Cuiaba"
+- "restaurante japones Cuiaba delivery"
+- "hospital Cuiaba emergencia telefone"
+
+Uso: <tool>web_search</tool><args>{"query": "Pague Menos farmacia Cuiaba telefone", "max_results": 10}</args>
 
 ### search_news
 Busca noticias recentes na internet.
-IMPORTANTE: Sempre escreva a query em PORTUGUES BRASILEIRO.
-Uso: <tool>search_news</tool><args>{"query": "notícias Brasil hoje", "max_results": 10}</args>
+
+QUANDO USAR:
+- Usuario pergunta sobre noticias/eventos recentes
+- Usuario quer saber "o que aconteceu com..."
+- Assuntos de politica, esportes, economia atual
+
+Uso: <tool>search_news</tool><args>{"query": "noticias Brasil hoje", "max_results": 10}</args>
 
 ---
 
-IMPORTANTE:
-- Sempre use as ferramentas quando precisar ler/modificar arquivos
-- Apos usar uma ferramenta, espere o resultado antes de continuar
-- Seja preciso nos caminhos de arquivo
-- Use edit_file para modificacoes pequenas, write_file para criar/reescrever arquivos
-- Para web_search: SEMPRE escreva a query em PORTUGUES BRASILEIRO correto
-- NUNCA use espanhol (en, de la) - use portugues (em, de, da, do)
+REGRAS CRITICAS PARA BUSCAS:
+
+1. SEMPRE use web_search ANTES de responder sobre empresas/contatos
+2. NUNCA invente telefones - se nao encontrar, diga "acesse o site"
+3. NUNCA invente enderecos ou CEPs
+4. SEMPRE escreva queries em PORTUGUES (em, de, da) NAO espanhol (en, de la)
+5. SEMPRE forneca os links encontrados na busca
+6. Prefira sites oficiais das empresas
+7. Cuidado com DDDs: 65=Cuiaba, 11=SP, 21=RJ, 31=BH, 85=Fortaleza
+
+FLUXO CORRETO:
+1. Usuario pergunta sobre empresa/telefone/endereco
+2. VOCE USA web_search com query bem formulada
+3. VOCE LE os resultados
+4. VOCE EXTRAI informacoes relevantes (ou diz "acesse o site")
+5. VOCE RESPONDE com as informacoes e links
 """
 
     def __init__(
