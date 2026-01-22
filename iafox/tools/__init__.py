@@ -2,6 +2,6 @@
 Ferramentas do IAFOX
 """
 
-from .web_search import web_search, buscar_web, buscar_noticias
+from .web_search import buscar_web, buscar_noticias, buscar_imagens
 
-__all__ = ["web_search", "buscar_web", "buscar_noticias"]
+__all__ = ["buscar_web", "buscar_noticias", "buscar_imagens"]
