@@ -312,6 +312,49 @@
             font-size: 0.8rem;
         }
 
+        .message p {
+            margin-bottom: 12px;
+        }
+
+        .message p:last-child {
+            margin-bottom: 0;
+        }
+
+        .message ul, .message ol {
+            margin: 10px 0;
+            padding-left: 24px;
+        }
+
+        .message li {
+            margin-bottom: 6px;
+        }
+
+        .message h2, .message h3, .message h4 {
+            margin: 16px 0 8px 0;
+            color: var(--accent);
+        }
+
+        .message h2 { font-size: 1.2rem; }
+        .message h3 { font-size: 1.1rem; }
+        .message h4 { font-size: 1rem; }
+
+        .message strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .message em {
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+
+        .message code:not(pre code) {
+            background: var(--bg-primary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--accent);
+        }
+
         /* Welcome */
         .welcome {
             display: flex;
@@ -644,22 +687,24 @@
         }
 
         let currentAssistantMsg = null;
+        let currentAssistantText = '';  // Guarda o texto raw com quebras de linha
 
         function handleMessage(data) {
             if (data.type === 'chunk') {
                 if (!currentAssistantMsg) {
                     removeTyping();
                     currentAssistantMsg = addMessage('', 'assistant');
+                    currentAssistantText = '';
                 }
-                currentAssistantMsg.innerHTML = formatMessage(
-                    currentAssistantMsg.textContent + data.content
-                );
+                currentAssistantText += data.content;
+                currentAssistantMsg.innerHTML = formatMessage(currentAssistantText);
                 messagesEl.scrollTop = messagesEl.scrollHeight;
             } else if (data.type === 'done') {
                 if (currentChat && currentAssistantMsg) {
-                    saveMessage('assistant', currentAssistantMsg.textContent);
+                    saveMessage('assistant', currentAssistantText);
                 }
                 currentAssistantMsg = null;
+                currentAssistantText = '';
                 sendBtn.disabled = false;
             } else if (data.type === 'workspace_changed') {
                 currentWorkspaceEl.textContent = data.path;
