@@ -680,11 +680,57 @@
         }
 
         function formatMessage(text) {
-            text = text.replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>');
+            if (!text) return '';
+
+            // Protege blocos de codigo
+            const codeBlocks = [];
+            text = text.replace(/```(\w+)?\n?([\s\S]*?)```/g, (match, lang, code) => {
+                codeBlocks.push(`<pre><code class="language-${lang || 'text'}">${escapeHtml(code.trim())}</code></pre>`);
+                return `__CODE_BLOCK_${codeBlocks.length - 1}__`;
+            });
+
+            // Codigo inline
             text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+            // Negrito
             text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+
+            // Italico
+            text = text.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+
+            // Listas com -
+            text = text.replace(/^- (.+)$/gm, '<li>$1</li>');
+            text = text.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
+
+            // Listas numeradas
+            text = text.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+
+            // Headers
+            text = text.replace(/^### (.+)$/gm, '<h4>$1</h4>');
+            text = text.replace(/^## (.+)$/gm, '<h3>$1</h3>');
+            text = text.replace(/^# (.+)$/gm, '<h2>$1</h2>');
+
+            // Quebras de linha - duas quebras = paragrafo, uma = <br>
+            text = text.replace(/\n\n+/g, '</p><p>');
             text = text.replace(/\n/g, '<br>');
+
+            // Restaura blocos de codigo
+            codeBlocks.forEach((block, i) => {
+                text = text.replace(`__CODE_BLOCK_${i}__`, block);
+            });
+
+            // Wrap em paragrafo se necessario
+            if (!text.startsWith('<')) {
+                text = '<p>' + text + '</p>';
+            }
+
             return text;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
 
         function addTyping() {
