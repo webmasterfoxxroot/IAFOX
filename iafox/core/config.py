@@ -12,7 +12,7 @@ import json
 class OllamaConfig(BaseModel):
     """Configuracoes do Ollama"""
     host: str = Field(default="http://localhost:11434", description="URL do servidor Ollama")
-    model: str = Field(default="dolphin-mixtral:8x7b", description="Modelo padrao - SEM CENSURA")
+    model: str = Field(default="qwen2.5-coder:32b", description="Modelo especializado em codigo")
     timeout: int = Field(default=300, description="Timeout em segundos")
 
 
