@@ -1,0 +1,40 @@
+========================================
+SISTEMA DE CONHECIMENTO IAFOX - RAG
+========================================
+
+COMO USAR:
+
+1. Coloque os PDFs dos livros na pasta:
+   conhecimento/livros_8ano/
+
+2. Organize por materia se quiser:
+   conhecimento/livros_8ano/matematica/
+   conhecimento/livros_8ano/portugues/
+   conhecimento/livros_8ano/ciencias/
+   conhecimento/livros_8ano/historia/
+   conhecimento/livros_8ano/geografia/
+   conhecimento/livros_8ano/ingles/
+
+3. Depois de colocar os PDFs, rode o indexador:
+   python -m iafox.tools.rag.indexar
+
+4. Pronto! A IAFOX vai poder consultar os livros.
+
+========================================
+LIVROS ESPERADOS:
+========================================
+
+- Conjunto Trilhas SE EFAF 8° ANO (FTD)
+- Conjunto Evolution Start EFAF 8° ANO (FTD)
+
+Materias cobertas:
+- Matematica
+- Lingua Portuguesa
+- Ciencias
+- Historia
+- Geografia
+- Ingles
+- Arte
+- Educacao Fisica
+
+========================================
