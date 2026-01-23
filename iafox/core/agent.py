@@ -10,6 +10,7 @@ from ..llm.ollama_client import OllamaClient, Message
 from ..files.manager import FileManager, FileContent
 from ..tools.web_search import buscar_web, buscar_noticias
 from ..tools.rag import buscar_nos_livros, verificar_index_existe
+from ..tools.image.gerar_imagem import gerar_imagem
 from .config import config
 
 
@@ -128,6 +129,28 @@ MATERIAS DISPONIVEIS:
 Uso: <tool>buscar_livros</tool><args>{"query": "equacao do segundo grau", "materia": "matematica", "max_results": 5}</args>
 Uso sem filtro: <tool>buscar_livros</tool><args>{"query": "revolucao francesa"}</args>
 
+### gerar_imagem (FLUX.1 - GERACAO DE IMAGENS)
+Gera imagens usando FLUX.1 via ComfyUI.
+
+REQUISITOS:
+- ComfyUI deve estar rodando em http://127.0.0.1:8188
+- Modelo FLUX.1 deve estar instalado no ComfyUI
+
+PARAMETROS:
+- prompt: Descricao da imagem (INGLES funciona melhor!)
+- largura: Largura em pixels (padrao 1024, max 2048)
+- altura: Altura em pixels (padrao 1024, max 2048)
+- passos: Qualidade (10=rapido, 20=normal, 30=alta)
+- seed: Para reproduzir mesma imagem (-1=aleatorio)
+
+EXEMPLOS DE PROMPTS (em ingles):
+- "A beautiful sunset over mountains, realistic photography, 8k"
+- "Cyberpunk city at night, neon lights, rain, cinematic"
+- "Portrait of a warrior, fantasy art, detailed armor"
+- "Cute cat playing with yarn, digital art, kawaii style"
+
+Uso: <tool>gerar_imagem</tool><args>{"prompt": "A majestic dragon flying over a castle, fantasy art, epic scene, detailed scales", "largura": 1024, "altura": 1024, "passos": 20}</args>
+
 ---
 
 REGRAS CRITICAS PARA BUSCAS:
@@ -174,6 +197,7 @@ FLUXO CORRETO:
             "web_search": self._tool_web_search,
             "search_news": self._tool_search_news,
             "buscar_livros": self._tool_buscar_livros,
+            "gerar_imagem": self._tool_gerar_imagem,
         }
 
     async def _tool_read_file(self, path: str) -> ToolResult:
@@ -325,6 +349,39 @@ FLUXO CORRETO:
         try:
             result = buscar_nos_livros(query, materia, max_results)
             return ToolResult(success=True, result=result)
+        except Exception as e:
+            return ToolResult(success=False, result=None, error=str(e))
+
+    async def _tool_gerar_imagem(
+        self,
+        prompt: str,
+        largura: int = 1024,
+        altura: int = 1024,
+        passos: int = 20,
+        seed: int = -1
+    ) -> ToolResult:
+        """Ferramenta: gera imagens com FLUX.1"""
+        try:
+            result = await gerar_imagem(
+                prompt=prompt,
+                largura=largura,
+                altura=altura,
+                passos=passos,
+                seed=seed
+            )
+
+            if result.get("sucesso"):
+                output = f"Imagem gerada com sucesso!\n"
+                output += f"Prompt: {result.get('prompt')}\n"
+                output += f"Resolucao: {result.get('largura')}x{result.get('altura')}\n"
+                if result.get("arquivo"):
+                    output += f"Salva em: {result.get('arquivo')}\n"
+                return ToolResult(success=True, result=output)
+            else:
+                error_msg = result.get("erro", "Erro desconhecido")
+                if result.get("instrucoes"):
+                    error_msg += "\n" + "\n".join(result.get("instrucoes"))
+                return ToolResult(success=False, result=None, error=error_msg)
         except Exception as e:
             return ToolResult(success=False, result=None, error=str(e))
 
