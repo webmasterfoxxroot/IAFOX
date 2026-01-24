@@ -52,12 +52,25 @@ class WebConfig(BaseModel):
     debug: bool = Field(default=False, description="Modo debug")
 
 
+class ImageConfig(BaseModel):
+    """Configuracoes de geracao de imagens com FLUX.1"""
+    enabled: bool = Field(default=True, description="Geracao de imagens habilitada")
+    comfyui_host: str = Field(default="127.0.0.1", description="Host do ComfyUI")
+    comfyui_port: int = Field(default=8188, description="Porta do ComfyUI")
+    model: str = Field(default="flux1-dev.safetensors", description="Modelo FLUX.1")
+    output_dir: str = Field(default="./imagens_geradas", description="Pasta de saida")
+    default_width: int = Field(default=1024, description="Largura padrao")
+    default_height: int = Field(default=1024, description="Altura padrao")
+    default_steps: int = Field(default=20, description="Passos padrao")
+
+
 class IAFOXConfig(BaseModel):
     """Configuracao principal do IAFOX"""
     ollama: OllamaConfig = Field(default_factory=OllamaConfig)
     files: FilesConfig = Field(default_factory=FilesConfig)
     rag: RAGConfig = Field(default_factory=RAGConfig)
     web: WebConfig = Field(default_factory=WebConfig)
+    image: ImageConfig = Field(default_factory=ImageConfig)
     system_prompt: str = Field(
         default="""Voce e o IAFOX, um assistente de IA local rodando no computador do usuario.
 
@@ -103,6 +116,14 @@ O QUE VOCE PODE FAZER:
 - Executar comandos -> execute_command
 - Criar sistemas completos com multiplos arquivos
 - BUSCAR NA INTERNET -> web_search
+- GERAR IMAGENS com FLUX.1 -> gerar_imagem
+
+GERACAO DE IMAGENS (FLUX.1):
+- Use a tool gerar_imagem para criar imagens
+- Prompts em INGLES funcionam MELHOR
+- Resolucao padrao: 1024x1024
+- Passos: 20 (normal), 30 (alta qualidade)
+- REQUISITO: ComfyUI deve estar rodando
 
 QUANDO PEDIREM PARA DESENVOLVER UM SISTEMA:
 1. NAO explique o que vai fazer - FACA
